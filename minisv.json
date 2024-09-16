@@ -1,0 +1,45 @@
+{
+  "logdir": "./",
+  "logfileprefix": "",
+  "logsuffixdate": "",
+  "logdate": "",
+  "logreopen": null,
+  "graylog": {
+    "remote": "",
+    "level": 0,
+    "addfields": null
+  },
+  "tasks": {
+    "gciwfic": {
+      "command": "E:\\CS233\\lib\\proxy_apps\\gciwfic\\gciwfic.exe",
+      "args": [],
+      "workdir": "E:\\CS233\\lib\\proxy_apps\\gciwfic",
+      "wait": 60,
+      "restartPause": 1,
+      "startTime": 10,
+      "oneTime": false
+    },
+    "nats": {
+      "command": "E:\\CS233\\lib\\proxy_apps\\nats-server\\nats-server.exe",
+      "args": [
+        "-c",
+        "E:\\CS233\\lib\\proxy_apps\\nats-server\\nats.conf"
+      ],
+      "workdir": "E:\\CS233\\lib\\proxy_apps\\nats-server",
+      "wait": 60,
+      "restartPause": 1,
+      "startTime": 10,
+      "oneTime": false
+    }
+  },
+  "limits": null,
+  "http": {
+    "address": "127.0.0.1",
+    "port": 3443,
+    "servercert": "",
+    "serverkey": "",
+    "clientcert": "",
+    "user": "",
+    "password": ""
+  }
+}

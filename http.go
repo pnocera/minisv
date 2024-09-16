@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
@@ -10,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
 	"syscall"
 	"time"
 
@@ -47,20 +45,6 @@ func basicAuth(user string, passwordHash string) func(http.Handler) http.Handler
 			next.ServeHTTP(w, r)
 		})
 	}
-}
-
-func httpInit() {
-	srv := httpStart()
-
-	// wait for USR1 signal to restart server (manly for certificates reload)
-	user1Chan := make(chan os.Signal, 1)
-	signal.Notify(user1Chan, syscall.SIGUSR1)
-	for range user1Chan {
-		log.Println("Restarting http server...")
-		srv.Shutdown(context.Background())
-		srv = httpStart()
-	}
-
 }
 
 func httpStart() *http.Server {

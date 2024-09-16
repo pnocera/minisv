@@ -2,9 +2,7 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
-	"syscall"
 )
 
 type configRLimit struct {
@@ -18,30 +16,30 @@ var (
 )
 
 func setLimit(limit configRLimit) error {
-	id, ok := rlimitTypes[limit.Type]
-	if !ok {
-		return errInvalidRLimit
-	}
+	// id, ok := rlimitTypes[limit.Type]
+	// if !ok {
+	// 	return errInvalidRLimit
+	// }
 
-	rLimit := syscall.Rlimit{
-		Cur: limit.Cur,
-		Max: limit.Max,
-	}
+	// rLimit := syscall.Rlimit{
+	// 	Cur: limit.Cur,
+	// 	Max: limit.Max,
+	// }
 
-	err := syscall.Setrlimit(id, &rLimit)
-	if err != nil {
-		return err
-	}
+	// err := syscall.Setrlimit(id, &rLimit)
+	// if err != nil {
+	// 	return err
+	// }
 
-	err = syscall.Getrlimit(id, &rLimit)
-	if err != nil {
-		return err
-	}
+	// err = syscall.Getrlimit(id, &rLimit)
+	// if err != nil {
+	// 	return err
+	// }
 
-	if rLimit.Cur != limit.Cur || rLimit.Max != limit.Max {
-		return fmt.Errorf("try to set %d/%d, but got %d/%d",
-			limit.Cur, limit.Max, rLimit.Cur, rLimit.Max)
-	}
+	// if rLimit.Cur != limit.Cur || rLimit.Max != limit.Max {
+	// 	return fmt.Errorf("try to set %d/%d, but got %d/%d",
+	// 		limit.Cur, limit.Max, rLimit.Cur, rLimit.Max)
+	// }
 
 	return nil
 }

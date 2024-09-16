@@ -5,9 +5,12 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"runtime"
 	"sync"
 	"syscall"
 	"time"
+
+	"golang.org/x/sys/windows"
 )
 
 func waitForErrChan(c chan error, t time.Duration) bool {
@@ -28,7 +31,11 @@ func termChild(running bool, cmd *exec.Cmd, ch chan error,
 		return
 	}
 
-	err := cmd.Process.Signal(syscall.SIGTERM)
+	var err error
+
+	
+	err = Terminate(cmd)
+
 	if nil != err {
 		_, e := fmt.Fprintln(out, "Error sending TERM signal: ", err)
 		if nil != e {
@@ -42,7 +49,9 @@ func termChild(running bool, cmd *exec.Cmd, ch chan error,
 			log.Println("Error writing log: ", err)
 		}
 
-		err = cmd.Process.Kill()
+		
+		err = Kill(cmd)
+
 		if nil != err {
 			_, e := fmt.Fprintln(out, "Error sending KILL signal: ", err)
 			if nil != e {
@@ -50,5 +59,39 @@ func termChild(running bool, cmd *exec.Cmd, ch chan error,
 			}
 		}
 	}
+}
 
+
+func Terminate(cmd *exec.Cmd) error{
+	var err error = nil
+	if runtime.GOOS == "windows" {
+		// Windows-specific code
+		if cmd.ProcessState == nil || cmd.ProcessState.Exited() {
+			return nil // Process has already finished
+		}
+		handle := windows.Handle(cmd.Process.Pid)
+		
+		err = windows.TerminateProcess(handle, 1)
+	} else {
+		// Unix-specific code
+		err = cmd.Process.Signal(syscall.SIGTERM)
+	}
+	return err
+}
+
+func Kill(cmd *exec.Cmd) error{
+	var err error = nil
+	if runtime.GOOS == "windows" {
+		// Windows-specific code
+		if cmd.ProcessState == nil || cmd.ProcessState.Exited() {
+			return nil // Process has already finished
+		}
+		handle := windows.Handle(cmd.Process.Pid)
+		
+		err = windows.TerminateProcess(handle, 1)
+	} else {
+		// Unix-specific code
+		err = cmd.Process.Kill()
+	}
+	return err
 }

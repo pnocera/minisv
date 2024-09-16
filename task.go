@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"sync"
 	"sync/atomic"
-	"syscall"
 	"time"
 )
 
@@ -138,7 +137,7 @@ itsDone:
 
 		case <-t.sSignal:
 			fmt.Fprintln(writer, "[minisv] Stopping task")
-			err = cmd.Process.Signal(syscall.SIGTERM)
+			err = Terminate(cmd) 
 			if nil != err {
 				fmt.Fprintln(writer, "[minisv] Error sending SIGTERM: ", err)
 			}
@@ -150,7 +149,7 @@ itsDone:
 		case <-killIt:
 			if !killCanceled {
 				fmt.Fprintln(writer, "[minisv] Killing task")
-				err = cmd.Process.Signal(syscall.SIGKILL)
+				err = Kill(cmd) 
 				if nil != err {
 					fmt.Fprintln(writer, "[minisv] Error sending SIGKILL: ", err)
 				}

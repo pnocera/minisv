@@ -58,7 +58,7 @@ var (
 )
 
 var (
-	configfile = flag.String("config", "/etc/minisv.json",
+	configfile = flag.String("config", "./minisv.json",
 		"minisv config file in json format")
 )
 
